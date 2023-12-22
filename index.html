@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebSocket Client</title>
+</head>
+<body>
+  <form id="commandForm">
+    <label for="commandInput">Enter command:</label>
+    <input type="text" id="commandInput" name="commandInput">
+    <button type="button" onclick="sendCommand()">Send Command</button>
+  </form>
+  <div id="output"></div>
+  <script>
+    const socket = new WebSocket('ws://localhost:8080');
+
+    // Обробник подій, коли з'єднання встановлено
+    socket.addEventListener('open', (event) => {
+      console.log('WebSocket connection opened:', event);
+    });
+
+    // Обробник подій для отримання повідомлень від сервера
+    socket.addEventListener('message', (event) => {
+      console.log('Message from server:', event.data);
+      document.getElementById('output').innerText = event.data;
+    });
+
+    // Обробник подій, коли з'єднання закрито
+    socket.addEventListener('close', (event) => {
+      console.log('WebSocket connection closed:', event);
+    });
+
+    // Відправити команду на сервер
+    function sendCommand() {
+      const commandInput = document.getElementById('commandInput').value;
+      socket.send(commandInput);
+    }
+  </script>
+</body>
+</html>
